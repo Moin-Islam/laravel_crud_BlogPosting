@@ -9,24 +9,33 @@
 </head>
 <body>
     <h1>Edit your Blog</h1>
+    <div>
+        @if($errors->any())
+        <ul>
+            @foreach ($errors->all() as $error)
+                {{$error}}
+            @endforeach
+        </ul>
+        @endif
+    </div>
     <form method="post" action="{{route('post.update', ['post' => $post])}}">
         @csrf
         @method('post')
-        <div>
-            <label>Name</label>
-            <input type="text" name="name" placeholder="Name" value="{{$post->name}}">
+        <div class="form-outline mb-4">
+            <label for="name" class="form-label"> Name :</label>
+            <input type="text" class="form-control form-control-lg" name="name" placeholder="Name" value="{{$post->name}}">
+        </div>
+
+        <div class="form-outline mb-4">
+            <label for="details" class="form-label"> Details :</label>
+            <input type="text" class="form-control form-control-lg" name="details" placeholder="Details" value="{{$post->details}}">
         </div>
 
         <div>
-            <label>Details</label>
-            <input type="text" name="details" placeholder="Details" value="{{$post->details}}">
+            <select class="form-control" name="user_id">
+                <option>{{$post->user_id}}</option>
+            </select>
         </div>
-
-        <div>
-            <label>User Id</label>
-            <input type="text" name="user_id" placeholder="Please enter your id" value="{{$post->user_id}}"/>
-
-        <div>
             <input type="submit" value="Update your Blog" />
         </div>
     </form>

@@ -10,6 +10,15 @@
 <body>
     <h1>Create a new Blog</h1>
     <div class="col d-flex justify-content-center align-items-center">
+        <div>
+            @if($errors->any())
+            <ul>
+                @foreach ($errors->all() as $error)
+                    {{$error}}
+                @endforeach
+            </ul>
+            @endif
+        </div>
         <form method="post" action="{{route('post.store')}}">
             @csrf
             @method('post')
@@ -24,9 +33,12 @@
             </div>
     
             <div>
-                <label for="user_id" class="form-label">User Id</label>
-                <input type="text" class="form-control" name="user_id" placeholder="Please enter your id" />
-    
+                <select class="form-control" name="user_id">
+                    @foreach ($posts as $post)
+                    <option>{{$post->user_id}}</option>
+                    @endforeach
+                </select>
+            </div>
             <div>
                 <input type="submit" value="Save a new Blog" />
             </div>

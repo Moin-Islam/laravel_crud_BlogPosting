@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Http\Requests\StoreUserRequest;
 use App\Models\User;
 use App\Models\Post;
 
@@ -16,17 +17,13 @@ class PostController extends Controller
 
     public function create()
     {
-        return view('post.create');
+        $posts = Post::with('user')->get();
+        return view('post.create', compact("posts"));
     }
 
-    public function store(Request $request)
+    public function store(StoreUserRequest $request)
     {
-        $data = $request->validate([
-            'name'=>'required',
-            'details'=>'required',
-            'user_id' => 'required'
-        ]);
-
+        $data = $request->validated();
         $newPost = Post::create($data);
 
         return redirect(route('post.post'));
@@ -37,23 +34,17 @@ class PostController extends Controller
         return view('post.edit', ['post' => $post]);
     }
 
-    public function update(Post $post, Request $request)
+    public function update(Post $post, StoreUserRequest $request)
     {
-        $data = $request->validate([
-            'name'=>'required',
-            'details'=>'required',
-            'user_id' => 'required'
-        ]);
+        $data = $request->validated();
 
         $post->update($data);
-
         return redirect(route('post.post'))->with('success', 'Post updated successfully');
     }
 
     public function destroy(Post $post)
     {
         $post->delete();
-        
         return redirect(route('post.post'))->with('success', 'Post updated successfully');
     }
 }
