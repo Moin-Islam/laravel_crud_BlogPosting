@@ -4,8 +4,10 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Http\Requests\StoreUserRequest;
+use App\FileUploaderHelper;
 use App\Models\User;
 use App\Models\Post;
+use Storage;
 
 class PostController extends Controller
 {
@@ -26,12 +28,14 @@ class PostController extends Controller
         $data = $request->validated();
         $post = new Post;
 
-        if($request->hasFile('image'))
-        {
+        if ($request->hasFile('image')) {
             $destination_path = 'public/images';
             $image = $request->file('image');
             $image_name = $image->getClientOriginalName();
-            $image->storeAs('public/images',$image_name);
+            $image->storeAs('public/images', $image_name);
+            //$image = $request->file('image');
+            $imageName = new \App\FileUploaderHelper\FileUploaderHelper();
+
             $post->name = $request->name;
             $post->details = $request->details;
             $post->user_id = $request->user_id;
@@ -43,7 +47,7 @@ class PostController extends Controller
         //$imageName = time().'.'.$data->photo->extension();
         //$newPost = Post::create($data);
 
-        
+
     }
 
     public function edit(Post $post)
@@ -54,8 +58,24 @@ class PostController extends Controller
     public function update(Post $post, StoreUserRequest $request)
     {
         $data = $request->validated();
+        //dd($request->image);
+        //dd($image);
+        //dd(Storage::get($image));
+        //dd(Storage::disk('s3')->exists($image));
+        if ($request->file('image')) {
+            $image = $request->file('image')->getClientOriginalName();
+            Storage::delete($image);
+            $imageFile = $request->file('image');
+            $imageFile->storeAs('public/images', $image);
 
-        $post->update($data);
+            $post->name = $request->name;
+            $post->details = $request->details;
+            $post->user_id = $request->user_id;
+            $post->photo = $image;
+
+            $post->update();
+        }
+        //$post->update($data);
         return redirect(route('post.post'))->with('success', 'Post updated successfully');
     }
 

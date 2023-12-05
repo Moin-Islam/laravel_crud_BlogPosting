@@ -18,7 +18,7 @@
         </ul>
         @endif
     </div>
-    <form method="post" action="{{route('post.update', ['post' => $post])}}">
+    <form method="post" enctype="multipart/form-data" action="{{route('post.update', ['post' => $post])}}">
         @csrf
         @method('post')
         <div class="form-outline mb-4">
@@ -30,6 +30,8 @@
             <label for="details" class="form-label"> Details :</label>
             <input type="text" class="form-control form-control-lg" name="details" placeholder="Details" value="{{$post->details}}">
         </div>
+
+        <input class="form-control" name="image" type="file" id="image"><br>
 
         <div>
             <select class="form-control" name="user_id">
