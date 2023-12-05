@@ -23,11 +23,13 @@
                 <th scope="col">details</th>
                 <th scope="col">Creaded at</th>
                 <th scope="col">User's Id of the post creator</th>
+                <th scope="col">Image</th>
                 <th scope="col">Edit</th>
                 <th scope="col">Delete</th>
             </tr>
         </thead>
         <tbody>
+            
             @foreach($posts as $post)
             <tr>
                 <td>{{$post->id}}</td>
@@ -35,6 +37,8 @@
                 <td>{{$post->details}}</td>
                 <td>{{date("d F,Y, h:i:A",strtotime($post->created_at))}}</td>
                 <td>{{$post->user_id}}</td>
+                <td><img src="<?php echo asset("storage/images/$post->photo")?>" style="height:50px;"/></td>
+                <td><img src="{{asset(Storage::url($post->photo))}}" style="height:50px;"/></td>
                 <td>
                     <a href="{{route('post.edit', ['post' => $post])}}">Edit</a>
                 </td>

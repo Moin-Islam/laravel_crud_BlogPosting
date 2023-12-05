@@ -8,41 +8,54 @@
     <title>Laravel CRUD</title>
 </head>
 <body>
-    <h1>Create a new Blog</h1>
-    <div class="col d-flex justify-content-center align-items-center">
-        <div>
-            @if($errors->any())
-            <ul>
-                @foreach ($errors->all() as $error)
-                    {{$error}}
-                @endforeach
-            </ul>
-            @endif
+   <div class="container">
+        <div class="row">
+            <div class="col-10" style="padding:20px;">
+                <div class="card" style="margin : 20px;">
+                    <div class="card-header">
+                       <h1> Create New Blog </h1>
+                    </div>
+                    <div class="card-body">
+            
+                    <div>
+                        @if($errors->any())
+                        <ul>
+                            @foreach ($errors->all() as $error)
+                                {{$error}}
+                            @endforeach
+                        </ul>
+                        @endif
+                    </div>
+                    <form method="post" enctype="multipart/form-data" action="{{route('post.store')}}">
+                        @csrf
+                        @method('post')
+                        
+                            <label> Name </label><br>
+                            <input type="text" class="form-control" name="name"> <br>
+                        
+                
+                        
+                            <label for="details" class="form-label">Details</label>
+                            <textarea class="form-control" rows="2" name="details" placeholder="Details"></textarea><br>
+                        
+            
+                        
+                            <select class="form-control" name="user_id">
+                                @foreach ($posts as $post)
+                                <option>{{$post->user_id}}</option>
+                                @endforeach
+                            </select><br>
+            
+                            <input class="form-control" name="image" type="file" id="image"><br>
+            
+                        <div>
+                            <input type="submit" class="btn btn-success" value="Create a new Blog" />
+                        </div>
+                    </form>
+                    </div>
+               </div>
+            </div>
         </div>
-        <form method="post" action="{{route('post.store')}}">
-            @csrf
-            @method('post')
-            <div class="form-outline mb-4">
-                <label for="name" class="form-label"> Name :</label>
-                <input type="text" class="form-control form-control-lg" name="name" placeholder="Name">
-            </div>
-    
-            <div class="mb-5">
-                <label for="details" class="form-label">Details</label>
-                <textarea class="form-control" rows="3" name="details" placeholder="Details"></textarea>
-            </div>
-    
-            <div>
-                <select class="form-control" name="user_id">
-                    @foreach ($posts as $post)
-                    <option>{{$post->user_id}}</option>
-                    @endforeach
-                </select>
-            </div>
-            <div>
-                <input type="submit" value="Save a new Blog" />
-            </div>
-        </form>
-    </div>
+   </div>
 </body>
 </html>

@@ -24,9 +24,26 @@ class PostController extends Controller
     public function store(StoreUserRequest $request)
     {
         $data = $request->validated();
-        $newPost = Post::create($data);
+        $post = new Post;
 
-        return redirect(route('post.post'));
+        if($request->hasFile('image'))
+        {
+            $destination_path = 'public/images';
+            $image = $request->file('image');
+            $image_name = $image->getClientOriginalName();
+            $image->storeAs('public/images',$image_name);
+            $post->name = $request->name;
+            $post->details = $request->details;
+            $post->user_id = $request->user_id;
+            $post->photo = $image_name;
+            $post->save();
+            return redirect(route('post.post'));
+            //dd($image_name, $image);
+        }
+        //$imageName = time().'.'.$data->photo->extension();
+        //$newPost = Post::create($data);
+
+        
     }
 
     public function edit(Post $post)
