@@ -1,20 +1,28 @@
 <?php
 
-namespace App\FileUploaderHelper;
-class FileUploaderHelper
-{
-    public function handle()
+if (!function_exists("ImageUploader")) {
+    function ImageUploader($image)
     {
         //$imageName = $uploadedFile->getClientOriginalName();
         $path = 'public/images';
-        
-        try{
-           //$uploadedFile->storeAs($path, $imageName);
-            //return $imageName;
-        }
-        catch (Exception $e)
+        $filename = $image->getClientOriginalName();
+        $image->storeAs($path, $filename);
+        return $filename;
+    }
+}
+
+if(!function_exists("UpdateImage"))
+{
+    function UpdateImage($image, $previousImage)
+    {
+
+        $path = 'public/images';
+        $filename = $image->getClientOriginalName();
+        if(Storage::url($previousImage))
         {
-            throw new Exception($e);
+            Storage::delete($previousImage);
         }
+        $image->storeAs($path, $filename);
+        return $filename;
     }
 }

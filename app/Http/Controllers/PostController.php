@@ -29,17 +29,14 @@ class PostController extends Controller
         $post = new Post;
 
         if ($request->hasFile('image')) {
-            $destination_path = 'public/images';
+
             $image = $request->file('image');
-            $image_name = $image->getClientOriginalName();
-            $image->storeAs('public/images', $image_name);
-            //$image = $request->file('image');
-            $imageName = new \App\FileUploaderHelper\FileUploaderHelper();
+            $imageName = ImageUploader($image);
 
             $post->name = $request->name;
             $post->details = $request->details;
             $post->user_id = $request->user_id;
-            $post->photo = $image_name;
+            $post->photo = $imageName;
             $post->save();
             return redirect(route('post.post'));
             //dd($image_name, $image);
@@ -58,20 +55,14 @@ class PostController extends Controller
     public function update(Post $post, StoreUserRequest $request)
     {
         $data = $request->validated();
-        //dd($request->image);
-        //dd($image);
-        //dd(Storage::get($image));
-        //dd(Storage::disk('s3')->exists($image));
         if ($request->file('image')) {
-            $image = $request->file('image')->getClientOriginalName();
-            Storage::delete($image);
-            $imageFile = $request->file('image');
-            $imageFile->storeAs('public/images', $image);
+            $image = $request->file('image');
+            $imageName = UpdateImage($image, $post->photo);
 
             $post->name = $request->name;
             $post->details = $request->details;
             $post->user_id = $request->user_id;
-            $post->photo = $image;
+            $post->photo = $imageName;
 
             $post->update();
         }
